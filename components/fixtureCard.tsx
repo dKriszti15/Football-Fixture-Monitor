@@ -1,7 +1,6 @@
 "use client";
 
 import { Fixture } from "@/app/_model/Fixture";
-import MyToggle from "./myToggle";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Checkbox } from "./ui/checkbox";
 import { useState, useEffect } from "react";
@@ -43,9 +42,6 @@ export default function FixtureCard({ fixture, index, isChecked, onCheckChange, 
                         <div className="font-semibold text-lg flex-1 text-right">{fixture.home_team}</div>
                         <div className="text-sm text-muted-foreground">vs</div>
                         <div className="font-semibold text-lg flex-1 text-left">{fixture.away_team}</div>
-                    </div>
-                    <div className="flex justify-center">
-                        <MyToggle/>
                     </div>
                     {probability && (
                         <div className="flex justify-center gap-6 text-sm mt-2">

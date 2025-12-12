@@ -1,15 +1,17 @@
 import { Fixture } from "@/app/_model/Fixture";
 import { Button } from "./ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import MyToggle from "./myToggle";
+import { Spinner } from "./ui/spinner";
 
 interface PredictionsModalProps {
     selectedMatches: Fixture[];
     probabilities: Map<string, any>;
     onGetProbabilities: () => void;
+    isPredicting: boolean;
 }
 
-export default function PredictionsModal({ selectedMatches, probabilities, onGetProbabilities }: PredictionsModalProps){
+export default function PredictionsModal({ selectedMatches, probabilities, onGetProbabilities, isPredicting }: PredictionsModalProps){
     const getProbabilityForFixture = (fixture: Fixture) => {
         const key = `${fixture.home_team}_${fixture.away_team}`;
         return probabilities.get(key);
@@ -18,7 +20,7 @@ export default function PredictionsModal({ selectedMatches, probabilities, onGet
     return(
         <Dialog>
             <DialogTrigger asChild>
-                <Button disabled={selectedMatches.length === 0}>
+                <Button disabled={selectedMatches.length === 0} className="text-lg px-5 py-5">
                     View Selected ({selectedMatches.length})
                 </Button>
             </DialogTrigger>
@@ -26,7 +28,12 @@ export default function PredictionsModal({ selectedMatches, probabilities, onGet
                 <DialogHeader>
                     <DialogTitle>Selected: {selectedMatches.length} fixture{selectedMatches.length !== 1 ? 's' : ''}</DialogTitle>
                 </DialogHeader>
-                <div className="space-y-4 py-4">
+                {isPredicting ? (
+                    <div className="flex justify-center items-center py-8">
+                        <Spinner className="size-8" />
+                    </div>
+                ) : (
+                    <div className="space-y-4 py-4">
                     {selectedMatches.map((fixture, index) => {
                         const probability = getProbabilityForFixture(fixture);
                         return (
@@ -61,10 +68,11 @@ export default function PredictionsModal({ selectedMatches, probabilities, onGet
                             </div>
                         );
                     })}
-                </div>
+                    </div>
+                )}
                 <DialogFooter className="flex gap-2">
-                    <Button onClick={onGetProbabilities} disabled={selectedMatches.length === 0}>
-                        Get Probabilities
+                    <Button onClick={onGetProbabilities} disabled={selectedMatches.length === 0 || isPredicting}>
+                        {isPredicting ? 'Loading...' : 'Get Probabilities'}
                     </Button>
                     <DialogClose asChild>
                         <Button variant="outline">Close</Button>

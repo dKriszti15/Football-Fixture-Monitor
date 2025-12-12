@@ -13,6 +13,7 @@ export default function TodaysFixtures(){
     const [selectedMatches, setSelectedMatches] = useState<Fixture[]>([]);
     const [probabilities, setProbabilities] = useState<Map<string, any>>(new Map());
     const [isLoading, setIsLoading] = useState(false);
+    const [isPredicting, setIsPredicting] = useState(false);
 
     useEffect(() => {
         const fetchFixtures = async () => {
@@ -41,6 +42,7 @@ export default function TodaysFixtures(){
             return;
         }
 
+        setIsPredicting(true);
         const result = await getBatchPredictions(selectedMatches);
         if (result && result.predictions) {
             const newProbabilities = new Map();
@@ -49,8 +51,8 @@ export default function TodaysFixtures(){
                 newProbabilities.set(key, prediction);
             });
             setProbabilities(newProbabilities);
-            return
         }
+        setIsPredicting(false);
     };
 
     useEffect(() => {
@@ -59,19 +61,18 @@ export default function TodaysFixtures(){
     
     return(
         <>
-            <div className="flex justify-center gap-4 p-4">
+            <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
                 <PredictionsModal 
                     selectedMatches={selectedMatches}
                     probabilities={probabilities}
-                    onGetProbabilities={handleGetProbabilities}
-                />
+                    onGetProbabilities={handleGetProbabilities}                    isPredicting={isPredicting}                />
             </div>
             {isLoading ? (
                 <div className="flex justify-center items-center min-h-[50vh]">
                     <Spinner className="size-8" />
                 </div>
             ) : (
-                <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4 max-w-7xl">
+                <div className="container mx-auto p-4 pt-22 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4 max-w-7xl">
                     {fixtures.map((fixture, index) => (
                         <FixtureCard 
                         key={index} 
