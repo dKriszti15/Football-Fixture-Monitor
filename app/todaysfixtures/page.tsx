@@ -4,8 +4,8 @@ import { useEffect, useState } from "react"
 import { Fixture } from "../_model/Fixture"
 import { getBatchPredictions, getFixturesForAWeek } from "../_service/fixtures";
 import FixtureCard from "@/components/fixtureCard";
-import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import PredictionsModal from "@/components/predictionsModal";
 
 export default function TodaysFixtures(){
     
@@ -49,12 +49,8 @@ export default function TodaysFixtures(){
                 newProbabilities.set(key, prediction);
             });
             setProbabilities(newProbabilities);
+            return
         }
-    };
-
-    const getProbabilityForFixture = (fixture: Fixture) => {
-        const key = `${fixture.home_team}_${fixture.away_team}`;
-        return probabilities.get(key);
     };
 
     useEffect(() => {
@@ -63,8 +59,12 @@ export default function TodaysFixtures(){
     
     return(
         <>
-            <div className="flex justify-center p-4">
-                <Button onClick={handleGetProbabilities}>Get Probabilities</Button>
+            <div className="flex justify-center gap-4 p-4">
+                <PredictionsModal 
+                    selectedMatches={selectedMatches}
+                    probabilities={probabilities}
+                    onGetProbabilities={handleGetProbabilities}
+                />
             </div>
             {isLoading ? (
                 <div className="flex justify-center items-center min-h-[50vh]">
@@ -79,7 +79,6 @@ export default function TodaysFixtures(){
                         index={index}
                         isChecked={selectedMatches.includes(fixture)}
                         onCheckChange={(checked) => handleCheckChange(index, checked)}
-                        probability={getProbabilityForFixture(fixture)}
                         />
                     ))}
                 </div>
