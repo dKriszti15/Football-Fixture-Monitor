@@ -1,12 +1,23 @@
+"use client";
 import { Fixture } from "@/app/_model/Fixture";
 import { Button } from "./ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import MyToggle from "./myToggle";
 import { Spinner } from "./ui/spinner";
 
+interface PredictionData {
+    home_team: string;
+    away_team: string;
+    probabilities: {
+        home_win: number;
+        draw: number;
+        away_win: number;
+    };
+}
+
 interface PredictionsModalProps {
     selectedMatches: Fixture[];
-    probabilities: Map<string, any>;
+    probabilities: Map<string, PredictionData>;
     onGetProbabilities: () => void;
     isPredicting: boolean;
 }

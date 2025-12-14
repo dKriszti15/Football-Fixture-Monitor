@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/contexts/theme/themeContext";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import ThemeSwitcher from "@/components/themeSwitcher";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +30,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider>
+          <TooltipProvider>
+            <div className="fixed top-4 left-4 z-50">
+              <ThemeSwitcher />
+            </div>
+            {children}
+          </TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

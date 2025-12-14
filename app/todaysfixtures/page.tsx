@@ -7,11 +7,21 @@ import FixtureCard from "@/components/fixtureCard";
 import { Spinner } from "@/components/ui/spinner";
 import PredictionsModal from "@/components/predictionsModal";
 
+interface PredictionData {
+    home_team: string;
+    away_team: string;
+    probabilities: {
+        home_win: number;
+        draw: number;
+        away_win: number;
+    };
+}
+
 export default function TodaysFixtures(){
     
     const [fixtures, setFixtures] = useState<Fixture[]>([]);
     const [selectedMatches, setSelectedMatches] = useState<Fixture[]>([]);
-    const [probabilities, setProbabilities] = useState<Map<string, any>>(new Map());
+    const [probabilities, setProbabilities] = useState<Map<string, PredictionData>>(new Map());
     const [isLoading, setIsLoading] = useState(false);
     const [isPredicting, setIsPredicting] = useState(false);
 
@@ -46,6 +56,7 @@ export default function TodaysFixtures(){
         const result = await getBatchPredictions(selectedMatches);
         if (result && result.predictions) {
             const newProbabilities = new Map();
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             result.predictions.forEach((prediction: any) => {
                 const key = `${prediction.home_team}_${prediction.away_team}`;
                 newProbabilities.set(key, prediction);
@@ -65,7 +76,9 @@ export default function TodaysFixtures(){
                 <PredictionsModal 
                     selectedMatches={selectedMatches}
                     probabilities={probabilities}
-                    onGetProbabilities={handleGetProbabilities}                    isPredicting={isPredicting}                />
+                    onGetProbabilities={handleGetProbabilities}
+                    isPredicting={isPredicting}
+                />
             </div>
             {isLoading ? (
                 <div className="flex justify-center items-center min-h-[50vh]">
