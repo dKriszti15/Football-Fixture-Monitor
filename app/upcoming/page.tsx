@@ -28,11 +28,24 @@ export default function TodaysFixtures(){
     useEffect(() => {
         const fetchFixtures = async () => {
             setIsLoading(true);
+
             const data = await getFixturesForAWeek();
+            localStorage.setItem('fixtures', JSON.stringify(data));
+            localStorage.setItem('fixtures_date', new Date().toDateString());
+            
             setFixtures(data);
             setIsLoading(false);
         };
-        fetchFixtures();
+
+        const cachedData = localStorage.getItem('fixtures');
+        const cachedDate = localStorage.getItem('fixtures_date');
+        const today = new Date().toDateString();
+
+        if(cachedData && cachedDate === today){
+            setFixtures(JSON.parse(cachedData));
+        } else {
+            fetchFixtures();
+        }
     }, []);
 
     const handleCheckChange = (index: number, checked: boolean) => {
