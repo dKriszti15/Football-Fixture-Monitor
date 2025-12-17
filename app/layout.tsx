@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Fixture Monitor",
-  description: "Dashboard to visualise predicted football matches' outcomes.",
+  description: "Dashboard to visualise calculated football matches' outcomes.",
 };
 
 export default function RootLayout({

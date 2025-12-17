@@ -6,6 +6,8 @@ import { getBatchPredictions, getFixturesForAWeek } from "../_service/fixtures";
 import FixtureCard from "@/components/fixtureCard";
 import { Spinner } from "@/components/ui/spinner";
 import PredictionsModal from "@/components/predictionsModal";
+import { ClearFixturesButton } from "@/components/clearFixturesButton";
+import { SelectAllButton } from "@/components/selectAllFixturesButton";
 
 interface PredictionData {
     home_team: string;
@@ -93,6 +95,18 @@ export default function TodaysFixtures(){
                     isPredicting={isPredicting}
                 />
             </div>
+
+            <div className="fixed top-6 right-6 z-50 flex flex-col gap-2">
+                <ClearFixturesButton 
+                    onClear={() => setSelectedMatches([])}
+                    disabled={selectedMatches.length === 0}
+                />
+                <SelectAllButton 
+                    onSelectAll={() => setSelectedMatches(fixtures)}
+                    disabled={selectedMatches.length === fixtures.length}
+                />
+            </div>
+
             {isLoading ? (
                 <div className="flex justify-center items-center min-h-[50vh]">
                     <Spinner className="size-8" />
